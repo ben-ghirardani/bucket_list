@@ -68,10 +68,24 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 var AjaxRequest = __webpack_require__(1);
+var BucketView = __webpack_require__(2);
+var AllCountriesView = __webpack_require__(3);
+
 
 function app(){
+    var countriesView = new AllCountriesView();
+    var bucketView = new BucketView();
     var countriesData = new AjaxRequest("https://restcountries.eu/rest/v2/all");
-    countriesData.get();
+    countriesData.get(countriesView.render);
+
+
+
+    var bucketData = new AjaxRequest("http://localhost:3000/api/bucket-list");
+    bucketData.get(bucketView.render);
+    
+
+
+    
 }
 
 window.addEventListener('load', app);
@@ -82,40 +96,78 @@ window.addEventListener('load', app);
 
 var AjaxRequest= function(url) {
   this.url = url;
-  this.allData = [];
-  this.currentData = [];
+  this.data = [];
 }
 
-AjaxRequest.prototype.get = function() {
+AjaxRequest.prototype.get = function(callback) {
   var request = new XMLHttpRequest();
-  request.open('GET', this.url);
-
-  request.addEventListener('load', function() {
-    if( request.status !== 200 ) return;
-
-    var jsonString = request.responseText;
-    this.allData = JSON.parse(jsonString);
-
-  }.bind(this));
+  request.open("GET", this.url);
+  request.onload = function(){
+    if(request.status === 200){
+      var jsonString = request.responseText;
+      this.characters = JSON.parse(jsonString);
+      callback(this.characters);
+    }
+  }.bind(this);
   request.send();
 }
 
-AjaxRequest.prototype.post = function(newData) {
+AjaxRequest.prototype.post = function(callback, data) {
+
   var request = new XMLHttpRequest();
-  request.open('POST', this.url);
+  request.open("POST", this.url);
   request.setRequestHeader("Content-Type", "application/json");
-  request.addEventListener('load', function() {
-    if( request.status !== 200 ) return;
-
-    var jsonString = request.responseText;
-    this.currentData = JSON.parse(jsonString);
-
-  }.bind(this));
-  request.send(JSON.stringify(newData));
+  request.onload = function(){
+    if(request.status === 200){
+      var jsonString = request.responseText;
+      this.characters = JSON.parse(jsonString);
+      callback(this.characters);
+    }
+  }.bind(this);
+  request.send(JSON.stringify(data));
 }
 
-
 module.exports = AjaxRequest;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+var BucketView = function(){
+
+}
+
+BucketView.prototype.render = function(data){
+    var bucketUl = document.querySelector("#bucket-display");
+    console.log(bucketUl);
+    for (var i = 0; i < data.length; i++) {
+        var nameLi = document.createElement('li');
+        nameLi.innerText = "Name: " + data[i].name;
+        bucketUl.appendChild(nameLi);
+    }
+}
+
+module.exports = BucketView;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+var AllCountriesView = function(){
+
+}
+
+AllCountriesView.prototype.render = function(data){
+    var select = document.querySelector("#country-list");
+
+    for (var i = 0; i < data.length; i++) {
+        var countryOption = document.createElement('option');
+        countryOption.innerText = data[i].name;
+        select.appendChild(countryOption);
+    }
+}
+
+module.exports = AllCountriesView;
 
 /***/ })
 /******/ ]);

@@ -1,36 +1,34 @@
 var AjaxRequest= function(url) {
   this.url = url;
-  this.allData = [];
-  this.currentData = [];
+  this.data = [];
 }
 
-AjaxRequest.prototype.get = function() {
+AjaxRequest.prototype.get = function(callback) {
   var request = new XMLHttpRequest();
-  request.open('GET', this.url);
-
-  request.addEventListener('load', function() {
-    if( request.status !== 200 ) return;
-
-    var jsonString = request.responseText;
-    this.allData = JSON.parse(jsonString);
-
-  }.bind(this));
+  request.open("GET", this.url);
+  request.onload = function(){
+    if(request.status === 200){
+      var jsonString = request.responseText;
+      this.characters = JSON.parse(jsonString);
+      callback(this.characters);
+    }
+  }.bind(this);
   request.send();
 }
 
-AjaxRequest.prototype.post = function(newData) {
+AjaxRequest.prototype.post = function(callback, data) {
+
   var request = new XMLHttpRequest();
-  request.open('POST', this.url);
+  request.open("POST", this.url);
   request.setRequestHeader("Content-Type", "application/json");
-  request.addEventListener('load', function() {
-    if( request.status !== 200 ) return;
-
-    var jsonString = request.responseText;
-    this.currentData = JSON.parse(jsonString);
-
-  }.bind(this));
-  request.send(JSON.stringify(newData));
+  request.onload = function(){
+    if(request.status === 200){
+      var jsonString = request.responseText;
+      this.characters = JSON.parse(jsonString);
+      callback(this.characters);
+    }
+  }.bind(this);
+  request.send(JSON.stringify(data));
 }
-
 
 module.exports = AjaxRequest;
