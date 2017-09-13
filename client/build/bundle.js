@@ -93,11 +93,22 @@ function app(){
 
         var bucketUl = document.querySelector("#bucket-display");
         var nameLi = document.createElement('li');
+        var deleteButton = document.createElement('button');
+        var flag = document.createElement('img');
+        var lineBreak = document.createElement('hr');
+        deleteButton.id = this.countries.value;
+        deleteButton.innerText = "Remove";
         nameLi.innerText = "Name: " + countryToAdd.name;
+        flag.src = countryToAdd.flag;
+        flag.width = 100;
+        bucketUl.appendChild(flag);
         bucketUl.appendChild(nameLi);
+        bucketUl.appendChild(deleteButton);
+        bucketUl.appendChild(lineBreak);
 
     })
 
+    
     
 }
 
@@ -140,23 +151,54 @@ AjaxRequest.prototype.post = function(callback, data) {
   request.send(JSON.stringify(data));
 }
 
+AjaxRequest.prototype.delete = function(index) {
+
+  var request = new XMLHttpRequest();
+  request.open("DELETE", this.url);
+  request.setRequestHeader("Content-Type", "application/json");
+  request.onload = function(){
+    if(request.status === 200){
+      var jsonString = request.responseText;
+      this.characters = JSON.parse(jsonString);
+    }
+  }.bind(this);
+  request.send(JSON.stringify(index));
+}
+
 module.exports = AjaxRequest;
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
 var BucketView = function(){
 
 }
 
-BucketView.prototype.render = function(data){
+BucketView.prototype.render = function(data, request){
     var bucketUl = document.querySelector("#bucket-display");
-    console.log(bucketUl);
+    // console.log(bucketUl);
     for (var i = 0; i < data.length; i++) {
         var nameLi = document.createElement('li');
+        var deleteButton = document.createElement('button');
+        var flag = document.createElement('img');
+        var lineBreak = document.createElement('hr');
+        deleteButton.value = i;
+        deleteButton.innerText = "Remove";
         nameLi.innerText = "Name: " + data[i].name;
+        flag.src = data[i].flag;
+        flag.width = 100;
+
+        deleteButton.addEventListener("click", function(){
+         var AjaxRequest = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./services/ajax_request\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+         var bucketData = new AjaxRequest("http://localhost:3000/api/bucket-list");
+          bucketData.delete(this.value);
+    })
+
+        bucketUl.appendChild(flag);
         bucketUl.appendChild(nameLi);
+        bucketUl.appendChild(deleteButton);
+        bucketUl.appendChild(lineBreak);
     }
 }
 

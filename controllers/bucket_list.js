@@ -26,5 +26,13 @@ countriesRouter.post("/", function(request,response){
     })
 })
 
+// Delete
+countriesRouter.delete("/:id", function(request, response){
+    console.log(request.body.name);
+    db.collection("countries").remove({ name : request.body.name}, function(error, results){
+        response.json(results);
+    });
+});
+
 
 module.exports = countriesRouter;

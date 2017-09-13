@@ -24,11 +24,22 @@ function app(){
 
         var bucketUl = document.querySelector("#bucket-display");
         var nameLi = document.createElement('li');
+        var deleteButton = document.createElement('button');
+        var flag = document.createElement('img');
+        var lineBreak = document.createElement('hr');
+        deleteButton.id = this.countries.value;
+        deleteButton.innerText = "Remove";
         nameLi.innerText = "Name: " + countryToAdd.name;
+        flag.src = countryToAdd.flag;
+        flag.width = 100;
+        bucketUl.appendChild(flag);
         bucketUl.appendChild(nameLi);
+        bucketUl.appendChild(deleteButton);
+        bucketUl.appendChild(lineBreak);
 
     })
 
+    
     
 }
 
