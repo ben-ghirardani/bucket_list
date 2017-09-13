@@ -177,7 +177,7 @@ var BucketView = function(){
 
 BucketView.prototype.render = function(data, request){
     var bucketUl = document.querySelector("#bucket-display");
-    // console.log(bucketUl);
+    
     for (var i = 0; i < data.length; i++) {
         var nameLi = document.createElement('li');
         var deleteButton = document.createElement('button');
@@ -187,8 +187,8 @@ BucketView.prototype.render = function(data, request){
         deleteButton.innerText = "Remove";
         nameLi.innerText = "Name: " + data[i].name;
         flag.src = data[i].flag;
-        flag.width = 100;
-
+				flag.width = 100;
+				
         deleteButton.addEventListener("click", function(){
          var AjaxRequest = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./services/ajax_request\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
          var bucketData = new AjaxRequest("http://localhost:3000/api/bucket-list");
