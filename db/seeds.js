@@ -1,5 +1,7 @@
 use bucketList;
 
+db.dropDatabase();
+
 db.countries.insert({
 "name": "Japan",
 "topLevelDomain": [

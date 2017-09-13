@@ -83,7 +83,20 @@ function app(){
     var bucketData = new AjaxRequest("http://localhost:3000/api/bucket-list");
     bucketData.get(bucketView.render);
     
+    var form = document.querySelector("form");
+    
+    form.addEventListener("submit", function(event){
+        event.preventDefault();
+        var countryToAdd = countriesData.characters[this.countries.value];
+        if (!countryToAdd.name) return;
+        bucketData.post(countriesView.render, countryToAdd);
 
+        var bucketUl = document.querySelector("#bucket-display");
+        var nameLi = document.createElement('li');
+        nameLi.innerText = "Name: " + countryToAdd.name;
+        bucketUl.appendChild(nameLi);
+
+    })
 
     
 }
@@ -162,6 +175,7 @@ AllCountriesView.prototype.render = function(data){
 
     for (var i = 0; i < data.length; i++) {
         var countryOption = document.createElement('option');
+        countryOption.value = i;
         countryOption.innerText = data[i].name;
         select.appendChild(countryOption);
     }

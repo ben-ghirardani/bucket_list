@@ -7,6 +7,7 @@ AllCountriesView.prototype.render = function(data){
 
     for (var i = 0; i < data.length; i++) {
         var countryOption = document.createElement('option');
+        countryOption.value = i;
         countryOption.innerText = data[i].name;
         select.appendChild(countryOption);
     }

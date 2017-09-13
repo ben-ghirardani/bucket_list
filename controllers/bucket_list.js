@@ -7,10 +7,24 @@ MongoClient.connect("mongodb://localhost:27017/bucketList", function(error, data
     db = database;
 });
 
+
+
+// Show
 countriesRouter.get("/", function(request, response){
     db.collection("countries").find().toArray(function(error, results){
     response.json(results);    
     });
 });
+
+
+
+// Create
+countriesRouter.post("/", function(request,response){
+    console.log(request.body);
+    db.collection("countries").insertOne(request.body, function(error, results){
+        response.json(results);
+    })
+})
+
 
 module.exports = countriesRouter;
