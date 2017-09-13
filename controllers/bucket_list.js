@@ -2,7 +2,7 @@ var express = require('express');
 var countriesRouter = express.Router();
 
 var MongoClient = require("mongodb").MongoClient;
-
+ObjectID = require('mongodb').ObjectID;
 MongoClient.connect("mongodb://localhost:27017/bucketList", function(error, database){
     db = database;
 });
@@ -24,8 +24,8 @@ countriesRouter.post("/", function(request,response){
 
 // Delete
 countriesRouter.delete("/:id", function(request, response){
-    console.log(request.body.name);
-    db.collection("countries").remove({ name : request.body.name}, function(error, results){
+    console.log(request.params.id);
+    db.collection("countries").remove({ _id : ObjectID(request.params.id)}, function(error, results){
         response.json(results);
     });
 });

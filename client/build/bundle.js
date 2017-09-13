@@ -154,7 +154,7 @@ AjaxRequest.prototype.post = function(callback, data) {
 AjaxRequest.prototype.delete = function(index) {
 
   var request = new XMLHttpRequest();
-  request.open("DELETE", this.url);
+  request.open("DELETE", this.url + "/" + index);
   request.setRequestHeader("Content-Type", "application/json");
   request.onload = function(){
     if(request.status === 200){
@@ -162,7 +162,7 @@ AjaxRequest.prototype.delete = function(index) {
       this.characters = JSON.parse(jsonString);
     }
   }.bind(this);
-  request.send(JSON.stringify(index));
+  request.send();
 }
 
 module.exports = AjaxRequest;
@@ -183,14 +183,14 @@ BucketView.prototype.render = function(data, request){
         var deleteButton = document.createElement('button');
         var flag = document.createElement('img');
         var lineBreak = document.createElement('hr');
-        deleteButton.value = i;
+        deleteButton.value = data[i]._id;
         deleteButton.innerText = "Remove";
         nameLi.innerText = "Name: " + data[i].name;
         flag.src = data[i].flag;
 				flag.width = 100;
 				
         deleteButton.addEventListener("click", function(){
-         var AjaxRequest = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./services/ajax_request\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+         var AjaxRequest = __webpack_require__(1);
          var bucketData = new AjaxRequest("http://localhost:3000/api/bucket-list");
           bucketData.delete(this.value);
     })
